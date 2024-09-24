@@ -8,7 +8,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import java.util.concurrent.TimeUnit;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -22,7 +21,6 @@ public class PlacingOrderBottom {
     @Before
     public void openPage() {
         driver.get("https://qa-scooter.praktikum-services.ru/");
-        driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         WebElement stationScroll = driver.findElement(item.orderButtonBottom);
         ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", stationScroll);
 
