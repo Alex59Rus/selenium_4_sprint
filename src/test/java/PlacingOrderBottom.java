@@ -3,32 +3,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import pages.MainPage;
+import pages.RentDetailPage;
+import pages.UserInfoPage;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 public class PlacingOrderBottom {
-    //WebDriver driver = new ChromeDriver(); (на нем тест оформления покупки валится)
-    WebDriver driver = new FirefoxDriver();
-    PageElements item = new PageElements();
+    private WebDriver driver;
 
-    @Before
-    public void openPage() {
-        driver.get("https://qa-scooter.praktikum-services.ru/");
-        WebElement stationScroll = driver.findElement(item.orderButtonBottom);
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", stationScroll);
-
-    }
-    @After
-    public void quitBrowser() {
-        driver.quit();
-    }
     private final String name;
     private final String surname;
     private final String address;
@@ -39,8 +24,9 @@ public class PlacingOrderBottom {
     private final String comment;
     private final String nameStation;
 
-
-    public PlacingOrderBottom(String name, String surname, String address, String number, String date, String rentPeriod, String color, String comment, String nameStation) {
+    public PlacingOrderBottom(String name, String surname, String address,
+                              String number, String date, String rentPeriod,
+                              String color, String comment, String nameStation) {
         this.name = name;
         this.surname = surname;
         this.address = address;
@@ -51,51 +37,54 @@ public class PlacingOrderBottom {
         this.comment = comment;
         this.nameStation = nameStation;
     }
+
+    @Before
+    public void openPageAndClickButtonOrder() {
+        //driver = new ChromeDriver(); (тесты валились на оформлении заказа)
+        driver = new FirefoxDriver();
+        MainPage main = new MainPage(driver);
+        main.openPage();
+        main.waitPage();
+        main.scrollDownToOrderButton();
+        main.clickOrderButtonBottom();
+    }
+
     @Parameterized.Parameters
     public static Object[][] fillOutData() {
         return new Object[][]{
                 {"Алексей", "Оборин", "г. Москва, Улица Фадеева, 4а", "+79990001122", "11", "сутки", "black", "тест", "Лихоборы"},
-                {"Шалтай", "Болтай", "г. Массква,Кремлин", "79990001122", "24", "двое суток", "grey", "тесттест", "Киевская"},
+                {"Шалтай", "Болтай", "г. Массква,Кремлин", "79990001122", "24", "двое суток", "grey", "тесттест", "Беговая"},
                 {"Венцеслав ", "Венгржановский", "ДОМ 2", "89990001122", "1", "трое суток", "black", "тесттесттест", "Ясенево"},
                 {"тест", "тест", "Питер", "+79990012322", "19", "четверо суток", "grey", "+_)(**^^%^#!%", "Лубянка"},
-                //для этого набора нужны эксепшны на негатив при вводе большого количества символов, либо править)
-                //{"тест1тест1тест1", "тест1тест1тест1", "Массква", "89999999999", "20", "пятеро суток", "grey", "asddas", "Спартак"},
-                //для этого набора нужны эксепшны на негатив при вводе английских символов, либо править)
-                //{"Alex", "Oborin", "Караганда", "89999999999", "11", "шестеро суток", "black", "    ", "Минская"}
                 {"Самса", "Говядина", "Перекустаксистачек", "89999999999", "28", "семеро суток", "grey", "123456", "Лужники"}
         };
     }
 
     @Test
-    public void makeOrderBottomButton() {
-        driver.findElement(item.orderButtonBottom).click();
+    public void makeOrder() {
+        UserInfoPage userInfo = new UserInfoPage(driver);
+        userInfo.inputName(name);
+        userInfo.inputSurname(surname);
+        userInfo.inputAddress(address);
+        userInfo.choiceStation(nameStation);
+        userInfo.inputPhone(phone);
 
-        driver.findElement(item.namePlaceHolder).sendKeys(name);
-        driver.findElement(item.surnamePlaceHolder).sendKeys(surname);
-        driver.findElement(item.addressPlaceHolder).sendKeys(address);
-        driver.findElement(item.stationPlaceHolder).click();
-        WebElement stationScroll = driver.findElement(By.xpath(".//div[text()='" + nameStation +"']"));
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", stationScroll);
-        driver.findElement(By.xpath(".//div[text()='" + nameStation +"']")).click();
-        driver.findElement(item.phonePlaceHolder).click();
-        driver.findElement(item.phonePlaceHolder).sendKeys(phone);
+        userInfo.clickNextButton();
+        RentDetailPage rentDetail = new RentDetailPage(driver);
 
-        driver.findElement(item.nextButton).click();
+        rentDetail.inputDate(date);
+        rentDetail.inputRentalPeriod(rentPeriod);
+        rentDetail.inputColor(color);
+        rentDetail.inputComment(comment);
+        rentDetail.pushOrderButton();
+        rentDetail.accessOrder();
 
-        driver.findElement(item.datePlaceHolder).click();
-        driver.findElement(By.xpath(".//div[text()='" + date +"']")).click();
-        driver.findElement(item.rentalPeriodPlaceHolder).click();
-        WebElement rentPeriodScroll = driver.findElement(By.xpath(".//div[text()='" + rentPeriod +"']"));
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView();", rentPeriodScroll);
-        driver.findElement(By.xpath(".//div[text()='" + rentPeriod +"']")).click();
-        driver.findElement(By.id(color)).click();
-        driver.findElement(item.orderComment).click();
-        driver.findElement(item.orderComment).sendKeys(comment);
-
-        driver.findElement(item.orderButton).click();
-        driver.findElement(item.accessOrderButton).click();
-
-        assertThat(driver.findElement(item.windowSuccess).getText(), is(containsString(item.success)));
+        assertTrue("Сообщение об оформлении заказа отображается некорректно", rentDetail.orderResultIsDisplayed());
+        assertTrue("Результат в сообщении не успешный",  rentDetail.getOrderResultText().contains(rentDetail.successExpectation));
     }
-
+    @After
+    public void quitBrowser() {
+        driver.quit();
+    }
 }
+
