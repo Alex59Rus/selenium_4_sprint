@@ -8,6 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.MainPage;
 import pages.RentDetailPage;
 import pages.UserInfoPage;
+
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
@@ -80,8 +81,9 @@ public class PlacingOrderBottom {
         rentDetail.accessOrder();
 
         assertTrue("Сообщение об оформлении заказа отображается некорректно", rentDetail.orderResultIsDisplayed());
-        assertTrue("Результат в сообщении не успешный",  rentDetail.getOrderResultText().contains(rentDetail.successExpectation));
+        assertTrue("Результат в сообщении не успешный", rentDetail.getOrderResultText().contains(rentDetail.successExpectation));
     }
+
     @After
     public void quitBrowser() {
         driver.quit();

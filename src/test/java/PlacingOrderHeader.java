@@ -82,8 +82,9 @@ public class PlacingOrderHeader {
         //Проверяем что отображается сообщение об оформлении заказа
         assertTrue("Сообщение об оформлении заказа отображается некорректно", rentDetail.orderResultIsDisplayed());
         //Убеждаемся что в итоговом сообщении указано, что заказ оформлен
-        assertTrue("Результат в сообщении не успешный",  rentDetail.getOrderResultText().contains(rentDetail.successExpectation));
+        assertTrue("Результат в сообщении не успешный", rentDetail.getOrderResultText().contains(rentDetail.successExpectation));
     }
+
     @After
     public void quitBrowser() {
         driver.quit();

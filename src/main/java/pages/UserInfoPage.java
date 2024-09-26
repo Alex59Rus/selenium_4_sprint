@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 public class UserInfoPage {
     private final WebDriver driver;
 
-    public UserInfoPage(WebDriver driver){
+    public UserInfoPage(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -32,7 +32,7 @@ public class UserInfoPage {
 
     public void choiceStation(String nameStation) {
         driver.findElement(stationPlaceHolder).click();
-        driver.findElement(By.xpath(String.format(".//div[text()='%s']/parent::button",nameStation))).click();
+        driver.findElement(By.xpath(String.format(".//div[text()='%s']/parent::button", nameStation))).click();
     }
 
 

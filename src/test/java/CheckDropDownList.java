@@ -6,7 +6,9 @@ import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import pages.MainPage;
+
 import static org.junit.Assert.assertEquals;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -56,6 +58,7 @@ public class CheckDropDownList {
         assertEquals("Ответ отличается от ожидаемого", answerText, main.getAnswerTextByID(fieldIndex));
         assertEquals("Количество вопросов отличается от ожидаемого", 8, main.getQuestionsCount());
     }
+
     @After
     public void tearDown() {
         driver.quit();

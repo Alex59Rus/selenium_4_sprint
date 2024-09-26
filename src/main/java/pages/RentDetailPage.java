@@ -8,7 +8,7 @@ import org.openqa.selenium.WebElement;
 public class RentDetailPage {
     WebDriver driver;
 
-    public RentDetailPage(WebDriver driver){
+    public RentDetailPage(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -49,6 +49,7 @@ public class RentDetailPage {
     public void accessOrder() {
         driver.findElement(accessOrderButton).click();
     }
+
     public boolean orderResultIsDisplayed() {
         return (!driver.findElements(windowSuccess).isEmpty());
     }
